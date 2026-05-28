@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Selina & Gino's Home</title>
+  <meta property="og:title" content="Selina & Gino's Home">
+  <meta property="og:description" content="80 m² renovated home in Vila de Gràcia, Barcelona — 2 bed, 2 bath, 1st floor">
+  <meta property="og:type" content="website">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: #fff;
+      color: #333;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    /* ─── Gallery ─── */
+    .gallery {
+      background: #f5f5f5;
+      width: 100%;
+      max-width: 1024px;
+      margin: 0 auto;
+      height: 450px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .gallery-img {
+      display: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    .gallery-img.active {
+      display: block;
+    }
+
+    .gallery-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      background: rgba(0, 0, 0, 0.45);
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.2s;
+      color: #fff;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .gallery-arrow:hover {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .gallery-arrow-left {
+      left: 14px;
+    }
+
+    .gallery-arrow-right {
+      right: 14px;
+    }
+
+    .gallery-arrow svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .gallery-counter {
+      position: absolute;
+      bottom: 14px;
+      left: 16px;
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      font-size: 13px;
+      padding: 3px 9px;
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    .gallery-label {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      font-size: 13px;
+      padding: 3px 12px;
+      border-radius: 12px;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    /* ─── Content wrapper ─── */
+    .content {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+    }
+
+    /* ─── Title section ─── */
+    .listing-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1.3;
+      margin-bottom: 6px;
+    }
+
+    .listing-subtitle {
+      font-size: 14px;
+      color: #777;
+    }
+
+    /* ─── Price ─── */
+    .price-block {
+      margin-top: 16px;
+    }
+
+    .price-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    /* ─── Specs bar ─── */
+    .specs-bar {
+      margin-top: 16px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid #e8e8e8;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .specs-bar span {
+      display: inline;
+    }
+
+    .specs-bar .sep {
+      margin: 0 8px;
+      color: #bbb;
+    }
+
+    /* ─── Sections ─── */
+    .section {
+      padding-top: 24px;
+      padding-bottom: 4px;
+      border-top: 1px solid #e8e8e8;
+      margin-top: 24px;
+    }
+
+    .price-block + .section {
+      border-top: none;
+      margin-top: 0;
+    }
+
+    .section-heading {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 14px;
+    }
+
+    /* ─── Description ─── */
+    .description p {
+      margin-bottom: 12px;
+      color: #333;
+      line-height: 1.65;
+    }
+
+    .description p:last-child {
+      margin-bottom: 0;
+    }
+
+    .description ul {
+      margin: 4px 0 12px 20px;
+      padding: 0;
+    }
+
+    .description ul li {
+      margin-bottom: 4px;
+      line-height: 1.6;
+    }
+
+    /* ─── Feature lists ─── */
+    .feature-list {
+      list-style: disc;
+      margin-left: 20px;
+      color: #333;
+    }
+
+    .feature-list li {
+      padding: 3px 0;
+      line-height: 1.55;
+    }
+
+    /* ─── Energy badges ─── */
+    .energy-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #444;
+    }
+
+    .energy-badge {
+      display: inline-block;
+      background: #f0a030;
+      color: #fff;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 2px 9px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    /* ─── Map ─── */
+    .location-label {
+      font-size: 13px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
+    }
+
+    .map-frame {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      display: block;
+    }
+
+    /* ─── Lightbox ─── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.95);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox-img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      cursor: pointer;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.2s;
+    }
+
+    .lightbox-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .lightbox .gallery-arrow {
+      width: 50px;
+      height: 50px;
+    }
+
+    .lightbox .gallery-arrow svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 768px) {
+      .gallery {
+        height: 280px;
+      }
+
+      .listing-title {
+        font-size: 18px;
+      }
+
+      .price-value {
+        font-size: 22px;
+      }
+
+      .section-heading {
+        font-size: 16px;
+      }
+
+      .gallery-arrow {
+        width: 36px;
+        height: 36px;
+      }
+
+      .gallery-arrow svg {
+        width: 15px;
+        height: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ─── Gallery ─── -->
+  <div class="gallery" id="gallery" onclick="openLightbox()">
+    <img class="gallery-img active" src="photos/1438579917.webp" alt="Living room">
+    <img class="gallery-img" src="photos/1438579762.webp" alt="Living room" loading="lazy">
+    <img class="gallery-img" src="photos/1438579923.webp" alt="Balcony" loading="lazy">
+    <img class="gallery-img" src="photos/1438579883.webp" alt="Living room" loading="lazy">
+    <img class="gallery-img" src="photos/1438579884.webp" alt="Living room" loading="lazy">
+    <img class="gallery-img" src="photos/1438579924.webp" alt="Views" loading="lazy">
+    <img class="gallery-img" src="photos/1438579920.webp" alt="Living room" loading="lazy">
+    <img class="gallery-img" src="photos/1438579918.webp" alt="Living room" loading="lazy">
+    <img class="gallery-img" src="photos/1438579882.webp" alt="Living room" loading="lazy">
+    <img class="gallery-img" src="photos/1438579919.webp" alt="Kitchen" loading="lazy">
+    <img class="gallery-img" src="photos/1438579927.webp" alt="Kitchen" loading="lazy">
+    <img class="gallery-img" src="photos/1438579921.webp" alt="Kitchen" loading="lazy">
+    <img class="gallery-img" src="photos/1438579761.webp" alt="Kitchen" loading="lazy">
+    <img class="gallery-img" src="photos/1438579935.webp" alt="Corridor" loading="lazy">
+    <img class="gallery-img" src="photos/1438579928.webp" alt="Bathroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579930.webp" alt="Bathroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579931.webp" alt="Bathroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579764.webp" alt="Bedroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579892.webp" alt="Bedroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579934.webp" alt="Living room" loading="lazy">
+    <img class="gallery-img" src="photos/1438579940.webp" alt="Bedroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579949.webp" alt="Bathroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579947.webp" alt="Bathroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579948.webp" alt="Bathroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579937.webp" alt="Details" loading="lazy">
+    <img class="gallery-img" src="photos/1438579936.webp" alt="Bedroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579933.webp" alt="Bedroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579763.webp" alt="Bedroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579938.webp" alt="Bedroom" loading="lazy">
+    <img class="gallery-img" src="photos/1438579950.webp" alt="Details" loading="lazy">
+
+    <button class="gallery-arrow gallery-arrow-left" onclick="event.stopPropagation(); galleryPrev()" aria-label="Previous photo">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <button class="gallery-arrow gallery-arrow-right" onclick="event.stopPropagation(); galleryNext()" aria-label="Next photo">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
+
+    <div class="gallery-counter" id="gallery-counter">1 / 30</div>
+    <div class="gallery-label" id="gallery-label">Living room</div>
+  </div>
+
+  <!-- ─── Main content ─── -->
+  <div class="content">
+
+    <!-- Title -->
+    <h1 class="listing-title">Flat / apartment for sale in Asturies</h1>
+    <p class="listing-subtitle">Vila de Gràcia, Barcelona</p>
+
+    <!-- Price (conditional) -->
+    <div class="price-block" id="price-block" style="display: none;">
+      <span class="price-value">620,000 €</span>
+    </div>
+
+    <!-- Specs bar -->
+    <div class="specs-bar">
+      <span>86 m²</span>
+      <span class="sep">|</span>
+      <span>2 bed.</span>
+      <span class="sep">|</span>
+      <span>1st floor exterior without lift</span>
+    </div>
+
+    <!-- Description -->
+    <div class="section">
+      <h2 class="section-heading">Property description</h2>
+      <div class="description">
+        <p><strong>Exclusive renovated home on Calle Asturias, in the heart of Vila de Gràcia</strong></p>
+        <p>Extraordinary 80 m² home according to the Cadastre, located on Calle Asturias, one of the most emblematic and sought-after streets in Vila de Gràcia, a few minutes from the Fontana metro station.</p>
+        <p>This is a unique property, completely renovated with high-quality materials and exquisite taste, where contemporary design is combined with the charm of preserved original elements: exposed beams, original brick walls, and restored doors, adding personality and warmth to each room.</p>
+        <p>The home is distributed into a spacious and bright living area, with a large living room and access to an exterior balcony overlooking Calle Asturias, a dining area, and an elegant open-plan kitchen with a central island, conceived as the heart of the home.</p>
+        <p>The sleeping area offers:</p>
+        <ul>
+          <li>2 double bedrooms, one of them a suite, with a private bathroom and dressing area.</li>
+          <li>2 full bathrooms.</li>
+          <li>A gallery with an ideal space for an office, perfect for teleworking or a multipurpose area.</li>
+        </ul>
+        <p>The home also features:</p>
+        <ul>
+          <li>Gas heating</li>
+          <li>Ducted air conditioning throughout the home</li>
+          <li>Recovered original elements that provide character and exclusivity</li>
+          <li>First floor, with comfortable access</li>
+        </ul>
+        <p>Located in one of Barcelona's most sought-after areas, surrounded by local shops, restaurants, services, and excellent transport links, this home represents an exceptional opportunity for those seeking design, authenticity, and quality of life in the heart of Gràcia.</p>
+        <p><em>A home with soul, ready to move into.</em></p>
+      </div>
+    </div>
+
+    <!-- Basic Features -->
+    <div class="section">
+      <h2 class="section-heading">Basic features</h2>
+      <ul class="feature-list">
+        <li>86 m² built, 80 m² floor area</li>
+        <li>2 bedrooms</li>
+        <li>2 bathrooms</li>
+        <li>Balcony</li>
+        <li>Second hand/good condition</li>
+        <li>Fitted wardrobes</li>
+        <li>Orientation East</li>
+        <li>Built in 1894</li>
+        <li>Individual heating: Natural gas</li>
+      </ul>
+    </div>
+
+    <!-- Building -->
+    <div class="section">
+      <h2 class="section-heading">Building</h2>
+      <ul class="feature-list">
+        <li>1st floor exterior</li>
+        <li>No lift</li>
+      </ul>
+    </div>
+
+    <!-- Amenities -->
+    <div class="section">
+      <h2 class="section-heading">Amenities</h2>
+      <ul class="feature-list">
+        <li>Air conditioning</li>
+      </ul>
+    </div>
+
+    <!-- Energy Performance -->
+    <div class="section">
+      <h2 class="section-heading">Energy performance certificate</h2>
+      <div class="energy-row">
+        <span>Consumption:</span>
+        <span class="energy-badge">E</span>
+        <span>175 kWh/m² year</span>
+      </div>
+      <div class="energy-row">
+        <span>Emissions:</span>
+        <span class="energy-badge">E</span>
+        <span>37 kg CO2/m² year</span>
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="section">
+      <h2 class="section-heading">Location</h2>
+      <p class="location-label">ASTURIES, Vila de Gràcia, Gràcia, Barcelona</p>
+      <iframe
+        class="map-frame"
+        src="https://www.google.com/maps?q=Carrer+d%27Ast%C3%BAries+23%2C+Gr%C3%A0cia%2C+08012+Barcelona&z=17&output=embed"
+        title="Map showing location of Carrer d'Asturies, Gràcia, Barcelona"
+        loading="lazy"
+        referrerpolicy="no-referrer"
+      ></iframe>
+    </div>
+
+  </div><!-- /.content -->
+
+  <!-- ─── Lightbox ─── -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <img class="lightbox-img" id="lightbox-img" src="" alt="" onclick="event.stopPropagation(); lightboxNext()">
+    <button class="gallery-arrow gallery-arrow-left" onclick="event.stopPropagation(); lightboxPrev()" aria-label="Previous photo">
+      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    </button>
+    <button class="gallery-arrow gallery-arrow-right" onclick="event.stopPropagation(); lightboxNext()" aria-label="Next photo">
+      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+    </button>
+    <button class="lightbox-close" onclick="event.stopPropagation(); closeLightboxNow()" aria-label="Close">&times;</button>
+    <div class="gallery-counter" id="lightbox-counter"></div>
+    <div class="gallery-label" id="lightbox-label"></div>
+  </div>
+
+  <script>
+    // ─── Photo data ───
+    var photos = [
+      { src: 'photos/1438579917.webp', label: 'Living room' },
+      { src: 'photos/1438579762.webp', label: 'Living room' },
+      { src: 'photos/1438579923.webp', label: 'Balcony' },
+      { src: 'photos/1438579883.webp', label: 'Living room' },
+      { src: 'photos/1438579884.webp', label: 'Living room' },
+      { src: 'photos/1438579924.webp', label: 'Views' },
+      { src: 'photos/1438579920.webp', label: 'Living room' },
+      { src: 'photos/1438579918.webp', label: 'Living room' },
+      { src: 'photos/1438579882.webp', label: 'Living room' },
+      { src: 'photos/1438579919.webp', label: 'Kitchen' },
+      { src: 'photos/1438579927.webp', label: 'Kitchen' },
+      { src: 'photos/1438579921.webp', label: 'Kitchen' },
+      { src: 'photos/1438579761.webp', label: 'Kitchen' },
+      { src: 'photos/1438579935.webp', label: 'Corridor' },
+      { src: 'photos/1438579928.webp', label: 'Bathroom' },
+      { src: 'photos/1438579930.webp', label: 'Bathroom' },
+      { src: 'photos/1438579931.webp', label: 'Bathroom' },
+      { src: 'photos/1438579764.webp', label: 'Bedroom' },
+      { src: 'photos/1438579892.webp', label: 'Bedroom' },
+      { src: 'photos/1438579934.webp', label: 'Living room' },
+      { src: 'photos/1438579940.webp', label: 'Bedroom' },
+      { src: 'photos/1438579949.webp', label: 'Bathroom' },
+      { src: 'photos/1438579947.webp', label: 'Bathroom' },
+      { src: 'photos/1438579948.webp', label: 'Bathroom' },
+      { src: 'photos/1438579937.webp', label: 'Details' },
+      { src: 'photos/1438579936.webp', label: 'Bedroom' },
+      { src: 'photos/1438579933.webp', label: 'Bedroom' },
+      { src: 'photos/1438579763.webp', label: 'Bedroom' },
+      { src: 'photos/1438579938.webp', label: 'Bedroom' },
+      { src: 'photos/1438579950.webp', label: 'Details' }
+    ];
+
+    var current = 0;
+    var total = photos.length;
+    var imgs = document.querySelectorAll('.gallery-img');
+    var counter = document.getElementById('gallery-counter');
+    var labelEl = document.getElementById('gallery-label');
+
+    function showPhoto(idx) {
+      imgs[current].classList.remove('active');
+      current = (idx + total) % total;
+      imgs[current].classList.add('active');
+      counter.textContent = (current + 1) + ' / ' + total;
+      labelEl.textContent = photos[current].label;
+    }
+
+    function galleryNext() {
+      showPhoto(current + 1);
+    }
+
+    function galleryPrev() {
+      showPhoto(current - 1);
+    }
+
+    // ─── Lightbox ───
+    var lightboxEl = document.getElementById('lightbox');
+    var lightboxImg = document.getElementById('lightbox-img');
+    var lightboxCounter = document.getElementById('lightbox-counter');
+    var lightboxLabel = document.getElementById('lightbox-label');
+    var lightboxOpen = false;
+
+    function openLightbox() {
+      lightboxOpen = true;
+      lightboxImg.src = photos[current].src;
+      lightboxImg.alt = photos[current].label;
+      lightboxCounter.textContent = (current + 1) + ' / ' + total;
+      lightboxLabel.textContent = photos[current].label;
+      lightboxEl.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightboxNow() {
+      lightboxOpen = false;
+      lightboxEl.classList.remove('open');
+      document.body.style.overflow = '';
+      // Sync header gallery to current photo
+      showPhoto(current);
+    }
+
+    function closeLightbox(e) {
+      // Only close if clicking the dark background, not the image or buttons
+      if (e.target === lightboxEl) {
+        closeLightboxNow();
+      }
+    }
+
+    function lightboxNext() {
+      current = (current + 1) % total;
+      lightboxImg.src = photos[current].src;
+      lightboxImg.alt = photos[current].label;
+      lightboxCounter.textContent = (current + 1) + ' / ' + total;
+      lightboxLabel.textContent = photos[current].label;
+    }
+
+    function lightboxPrev() {
+      current = (current - 1 + total) % total;
+      lightboxImg.src = photos[current].src;
+      lightboxImg.alt = photos[current].label;
+      lightboxCounter.textContent = (current + 1) + ' / ' + total;
+      lightboxLabel.textContent = photos[current].label;
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && lightboxOpen) {
+        closeLightboxNow();
+        return;
+      }
+      if (lightboxOpen) {
+        if (e.key === 'ArrowRight') lightboxNext();
+        if (e.key === 'ArrowLeft') lightboxPrev();
+      } else {
+        if (e.key === 'ArrowRight') galleryNext();
+        if (e.key === 'ArrowLeft') galleryPrev();
+      }
+    });
+
+    // Touch / swipe navigation (header gallery + lightbox)
+    (function() {
+      var touchStartX = 0;
+      var touchStartY = 0;
+
+      function addSwipe(el, onNext, onPrev) {
+        el.addEventListener('touchstart', function(e) {
+          touchStartX = e.changedTouches[0].clientX;
+          touchStartY = e.changedTouches[0].clientY;
+        }, { passive: true });
+
+        el.addEventListener('touchend', function(e) {
+          var dx = e.changedTouches[0].clientX - touchStartX;
+          var dy = e.changedTouches[0].clientY - touchStartY;
+          // Only act on predominantly horizontal swipes longer than 50px
+          if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+            if (dx < 0) {
+              onNext();
+            } else {
+              onPrev();
+            }
+            e.preventDefault();
+          }
+        }, { passive: false });
+      }
+
+      addSwipe(document.getElementById('gallery'), galleryNext, galleryPrev);
+      addSwipe(document.getElementById('lightbox'), lightboxNext, lightboxPrev);
+    })();
+
+    // ─── Price visibility ───
+    (function() {
+      var show = new URLSearchParams(window.location.search).get('price') === 'true';
+      if (show) {
+        document.getElementById('price-block').style.display = 'block';
+      }
+    })();
+  </script>
+</body>
+</html>
